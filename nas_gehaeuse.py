@@ -1,5 +1,5 @@
-# Raspberry Pi 5 Mini-NAS Gehäuse, Version 2
-# V2: 40-mm-Abluftlüfter in der linken Wand, Deckel geschlossen (Staubschutz)
+# Raspberry Pi 5 Mini-NAS Gehäuse, Version 3
+# V3: gemessene HAT-Höhen, 12 mm mehr Tiefe für USB-SATA-Adapter + Kabelbogen
 # In FreeCAD ausführen: baut das Dokument "Projekt" komplett neu auf.
 # Koordinaten: X = Breite (links->rechts), Y = Tiefe (vorne->hinten), Z = Höhe.
 # Ursprung = innere vordere linke untere Ecke des Gehäuses. Alle Maße in mm.
@@ -9,10 +9,11 @@ from FreeCAD import Vector as V
 
 # ---------- Parameter ----------
 T = 2.5            # Wandstärke
-W, D, H = 72, 128, 90   # Innenmaße Breite, Tiefe, Höhe
+W, D, H = 72, 140, 90   # Innenmaße Breite, Tiefe, Höhe
 FIT = 0.3          # Spiel für Teile, die ineinander gesteckt werden
 
 DRV_W, DRV_L, DRV_H = 69.85, 100.0, 9.5   # 2,5"-Laufwerk (SFF-8201), max. 9,5 mm hoch
+ADAPTER_L = 20     # USB-SATA-Adapter hinter dem Laufwerk (gemessen: HDD + Adapter = 120 mm); dahinter Platz für den Kabelbogen
 SLOT_H = 12        # Höhe eines Laufwerksschachts
 RAIL = 2           # Dicke der Trennschiene zwischen den Schächten
 RAIL_W = 4         # wie weit Schienen/Leisten aus der Wand ragen
@@ -20,14 +21,15 @@ RAIL_W = 4         # wie weit Schienen/Leisten aus der Wand ragen
 TRAY_Z, TRAY_T = 30, 3   # Pi-Träger: Unterkante, Dicke
 STANDOFF_H = 6
 PCB_T = 1.6
-HAT_GAP = 16.5     # Pi-Oberseite bis HAT-Unterseite (16-mm-Stapelheader, ungefähr)
+HAT_GAP = 15.5     # Pi-Oberseite bis HAT-Unterseite (gemessen: etwas über 15 mm)
+SSD_STACK = 15     # SSD + Kühlkörper über der HAT-Oberseite (gemessen: knapp 15 mm)
 
 # Abluftlüfter 40x40x10 (z. B. Noctua NF-A4x10 5V), innen an der linken Wand, bläst nach außen
 FAN, FAN_T, FAN_PITCH = 40, 10, 32   # Kantenlänge, Dicke, Lochabstand
-FAN_Y, FAN_Z = 88, 64                # Mittelpunkt in der linken Wand (über dem Pi)
+FAN_Y, FAN_Z = D - 40, 64               # Mittelpunkt in der linken Wand (über dem Pi)
 
 # Pi 5 laut offizieller Zeichnung (px entlang 85 mm, py entlang 56 mm, py=0 = HDMI-Kante)
-PI_Y0 = 42.5                  # Pi px=0 liegt bei case-Y=42.5 -> Ports (3 mm Überstand) bündig mit Rückwand
+PI_Y0 = D + T - 88            # Pi px=0 so, dass die Ports (3 mm Überstand) bündig mit der Rückwand abschließen
 PI_X0 = W - 2                 # py=0 (HDMI-Kante) liegt 2 mm vor der rechten Wand
 def pi(px, py):              # Pi-Koordinate -> Gehäuse (X, Y); gedreht, nicht gespiegelt
     return PI_X0 - py, PI_Y0 + px
@@ -129,10 +131,12 @@ refs = {
     "Pi5_HDMI_1": pi_box(35.7, -1, 42.7, 7, PCB_TOP, PCB_TOP + 3.4),
     "Pi5_Aktivkuehler": pi_box(25, 12, 60, 45, PCB_TOP, PCB_TOP + 9),
     "M2_HAT": pi_box(0, 0, 65, 56.5, PCB_TOP + HAT_GAP, PCB_TOP + HAT_GAP + 1.6),
-    "M2_SSD_mit_Kuehler": pi_box(10, 18, 52, 40, PCB_TOP + HAT_GAP + 1.6, PCB_TOP + HAT_GAP + 9),
+    "M2_SSD_mit_Kuehler": pi_box(10, 18, 52, 40, PCB_TOP + HAT_GAP + 1.6, PCB_TOP + HAT_GAP + 1.6 + SSD_STACK),
     "AI_HAT_Reserve": pi_box(0, 0, 65, 56.5, PCB_TOP + 2 * HAT_GAP + 1.6, PCB_TOP + 2 * HAT_GAP + 3.2),
     "AI_HAT_Chip_Reserve": pi_box(10, 10, 50, 46, PCB_TOP + 2 * HAT_GAP + 3.2, PCB_TOP + 2 * HAT_GAP + 9),
     "Luefter_40mm": box(0, FAN_Y - FAN / 2, FAN_Z - FAN / 2, FAN_T, FAN_Y + FAN / 2, FAN_Z + FAN / 2),
+    "Adapter_1": box((W - DRV_W) / 2, DRV_L, 0, (W + DRV_W) / 2, DRV_L + ADAPTER_L, DRV_H),
+    "Adapter_2": box((W - DRV_W) / 2, DRV_L, SLOT_H + RAIL, (W + DRV_W) / 2, DRV_L + ADAPTER_L, SLOT_H + RAIL + DRV_H),
     "HDD_1": box((W - DRV_W) / 2, 0, 0, (W + DRV_W) / 2, DRV_L, DRV_H),
     "HDD_2": box((W - DRV_W) / 2, 0, SLOT_H + RAIL, (W + DRV_W) / 2, DRV_L, SLOT_H + RAIL + DRV_H),
 }
