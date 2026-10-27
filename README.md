@@ -26,6 +26,7 @@ Es gibt zwei Stil-Varianten mit identischem Innenleben. Nur Front, Außenkanten 
 | `picraft_gehaeuse.py` | Bauskript. Alle Maße als Parameter oben. Erzeugt das Modell in FreeCAD komplett neu. |
 | `PiCRAFT_Server.FCStd` | Gespeichertes FreeCAD-Modell, Stil Server (Dokument „PiCRAFT_Server“) |
 | `PiCRAFT_NAS.FCStd` | Gespeichertes FreeCAD-Modell, Stil NAS (Dokument „PiCRAFT_NAS“) |
+| `PiCRAFT_Server.blend` | Blender-Szene, Stil Server: die fünf STL-Dateien zusammengebaut in Einbaulage (Maße in Metern, 1 mm = 0,001 m). Nur zum Ansehen und Rendern, wird vom Skript nicht erzeugt. |
 | `CLAUDE.md` | Arbeitsanweisungen für Claude Code |
 | `ansicht.png` / `ansicht_server.png` | Gerenderte Ansichten beider Stile |
 | `IMG_3338.jxl` / `.jpeg` | Foto des aktuellen Aufbaus (JPEG für die Anzeige auf GitHub) |
@@ -202,7 +203,7 @@ Im Ordner `stl/PiCRAFT_Server/`. Die Dateien liegen schon in Druckausrichtung be
 | `Power_Stoessel.stl` | 7 × 57,5 × 5,5 hoch | liegend |
 | `Filterrahmen.stl` | 63,4 × 37,5 × 1,4 hoch | flach |
 
-Das Gehäuse braucht ein Druckbett von mindestens 160 mm Tiefe. Das Skript schreibt die STL-Dateien bei jedem Lauf neu (Stile in `STL_STYLES`) und prüft dabei, dass jedes Netz geschlossen ist und sich nicht selbst schneidet.
+Das Gehäuse braucht ein Druckbett von mindestens 160 mm Tiefe. Das Skript schreibt die STL-Dateien bei jedem Lauf neu (Stile in `STL_STYLES`) und prüft dabei, dass jedes Netz geschlossen ist und sich nicht selbst schneidet. `PiCRAFT_Server.blend` aktualisiert sich dabei nicht; nach einer Modelländerung die STL-Dateien dort neu laden.
 
 ## Schrauben
 
