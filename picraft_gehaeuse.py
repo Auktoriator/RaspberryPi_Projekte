@@ -1,5 +1,5 @@
-# Raspberry Pi 5 Mini-NAS Gehäuse, Version 6
-# V6: zweite Stil-Variante „server“ (Wabengitter, Griffe, gefaste Kanten) neben „nas“
+# PiCRAFT – Raspberry Pi 5 Gehäuse mit zwei 2,5"-Schächten, Version 7
+# V7: Name PiCRAFT (Schriftzug, Dokumente, Dateien); Stil „server“ ist der Hauptstil, „nas“ bleibt als Alternative
 # In FreeCAD ausführen: baut für jeden Stil in STYLES ein eigenes Dokument komplett neu auf.
 # Koordinaten: X = Breite (links->rechts), Y = Tiefe (vorne->hinten), Z = Höhe.
 # Ursprung = innere vordere linke untere Ecke des Gehäuses. Alle Maße in mm.
@@ -15,9 +15,9 @@ EDGE_R = 4         # nas: Radius der senkrechten Außenkanten
 EDGE_C = 2.5       # server: Fase der senkrechten Außenkanten
 
 # Stil -> FreeCAD-Dokument. Innenleben ist bei allen Stilen gleich, nur Front, Kanten und Griffe unterscheiden sich.
-STYLES = {"nas": "Projekt", "server": "Projekt_Server"}
+STYLES = {"server": "PiCRAFT_Server", "nas": "PiCRAFT_NAS"}
 
-NAME = "PiNAS"     # Schriftzug auf der Front
+NAME = "PiCRAFT"   # Schriftzug auf der Front
 FONT = "/System/Library/Fonts/Supplemental/Arial Rounded Bold.ttf"
 ENGRAVE = 0.6      # Tiefe von Gravuren und Vertiefungen
 BAY_CHAMFER = 0.8  # Fase an den Schachtöffnungen
@@ -159,7 +159,7 @@ def front_features(style):
             x = W / 2 - 25 + 4 * i
             cuts.append(box(x, -T - 1, FILTER_Z0 + 4, x + 2, 1, FILTER_Z1 - 4.5))
         cuts.append(Part.makeCylinder(5, ENGRAVE + 1, V(BTN_X, -T - 1, BTN_Z), V(0, 1, 0)).cut(Part.makeCylinder(4, ENGRAVE + 2, V(BTN_X, -T - 2, BTN_Z), V(0, 1, 0))))
-        cuts.append(on_front(text_solid(NAME, 7), 6, 31))
+        cuts.append(on_front(text_solid(NAME, 6), 6, 31))
     return cuts
 
 CABLE_X0, CABLE_X1 = W / 2 - 11, W / 2 + 11

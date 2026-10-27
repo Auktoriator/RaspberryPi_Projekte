@@ -1,14 +1,14 @@
-# Raspberry Pi 5 Mini-NAS Gehäuse
+# PiCRAFT
 
-3D-druckbares Gehäuse im Stil eines kleinen 2-Bay-NAS für einen Raspberry Pi 5 mit M.2 HAT+ und zwei 2,5"-Laufwerken.
+3D-druckbares Server-Gehäuse für einen Raspberry Pi 5 mit M.2 HAT+ und zwei 2,5"-Laufwerken. Gedacht für Minecraft-Server, Backup und NAS.
 
-**Aktuelle Version: 6**
+**Aktuelle Version: 7**
 
-Es gibt zwei Stil-Varianten mit identischem Innenleben. Nur Front, Außenkanten und Griffe unterscheiden sich.
+Es gibt zwei Stil-Varianten mit identischem Innenleben. Nur Front, Außenkanten und Griffe unterscheiden sich. **Hauptstil ist Server**, NAS bleibt als Alternative.
 
-| NAS (`nas`) | Server (`server`) |
+| Server (`server`, Hauptstil) | NAS (`nas`) |
 |---|---|
-| ![NAS-Variante](ansicht.png) | ![Server-Variante](ansicht_server.png) |
+| ![Server-Variante](ansicht_server.png) | ![NAS-Variante](ansicht.png) |
 
 ![Foto des aktuellen Aufbaus](IMG_3338.jpeg)
 
@@ -16,14 +16,14 @@ Es gibt zwei Stil-Varianten mit identischem Innenleben. Nur Front, Außenkanten 
 
 | Datei | Inhalt |
 |---|---|
-| `nas_gehaeuse.py` | Bauskript. Alle Maße als Parameter oben. Erzeugt das Modell in FreeCAD komplett neu. |
-| `Pi5_NAS_Gehaeuse.FCStd` | Gespeichertes FreeCAD-Modell, Stil NAS (Dokument „Projekt“) |
-| `Pi5_NAS_Gehaeuse_Server.FCStd` | Gespeichertes FreeCAD-Modell, Stil Server (Dokument „Projekt_Server“) |
+| `picraft_gehaeuse.py` | Bauskript. Alle Maße als Parameter oben. Erzeugt das Modell in FreeCAD komplett neu. |
+| `PiCRAFT_Server.FCStd` | Gespeichertes FreeCAD-Modell, Stil Server (Dokument „PiCRAFT_Server“) |
+| `PiCRAFT_NAS.FCStd` | Gespeichertes FreeCAD-Modell, Stil NAS (Dokument „PiCRAFT_NAS“) |
 | `CLAUDE.md` | Arbeitsanweisungen für Claude Code |
 | `ansicht.png` / `ansicht_server.png` | Gerenderte Ansichten beider Stile |
 | `IMG_3338.jxl` / `.jpeg` | Foto des aktuellen Aufbaus (JPEG für die Anzeige auf GitHub) |
 
-Modell neu erzeugen: In FreeCAD *Makro → Makros…* oder über Claude (FreeCAD-MCP) `nas_gehaeuse.py` ausführen. Das Skript baut beide Stile; welche, steht in `STYLES` oben im Skript.
+Modell neu erzeugen: In FreeCAD *Makro → Makros…* oder über Claude (FreeCAD-MCP) `picraft_gehaeuse.py` ausführen. Das Skript baut beide Stile; welche, steht in `STYLES` oben im Skript.
 
 ## Gehäuse
 
@@ -56,7 +56,7 @@ Modell neu erzeugen: In FreeCAD *Makro → Makros…* oder über Claude (FreeCAD
 
 - **Lüftungsgitter:** 13 senkrechte Schlitze (2 mm) in einem 0,6 mm vertieften Feld mit runden Ecken; dahinter der Staubfilter.
 - **Power-Knopf:** runder Druckpunkt (Ø 4 mm) mit eingraviertem Ring, rechts.
-- **Schriftzug „PiNAS“:** 7 mm hoch, 0,6 mm tief eingraviert, links. Name und Schrift stehen als `NAME` und `FONT` oben im Skript.
+- **Schriftzug „PiCRAFT“:** 6 mm hoch, 0,6 mm tief eingraviert, links. Name und Schrift stehen als `NAME` und `FONT` oben im Skript.
 - **Laufwerksschächte:** Öffnungen außen mit 0,8 mm Fase; zwischen den Schächten bleibt dadurch eine feine Trennlinie.
 
 **Server-Stil:**
@@ -64,7 +64,7 @@ Modell neu erzeugen: In FreeCAD *Makro → Makros…* oder über Claude (FreeCAD
 - **Wabengitter:** sechseckige Löcher (Spitze nach oben, damit sie in der senkrechten Wand ohne Stützen drucken) mittig im Bereich des Staubfilters.
 - **Griffe:** zwei senkrechte Rack-Griffe links und rechts, 14 mm vor der Front, oberhalb der Schächte. Die Stege sind unten 45° angefast.
 - **Power-Knopf:** runder Druckpunkt mit eingraviertem quadratischem Rahmen.
-- **Schriftzug „PiNAS“:** 5 mm hoch.
+- **Schriftzug „PiCRAFT“:** 5 mm hoch, 0,6 mm tief eingraviert.
 - **Laufwerksschächte:** wie beim NAS-Stil.
 
 Die **Schachtnummern 1 und 2** sind auf der linken Seitenwand neben den Laufwerksschrauben eingraviert. Auf der Front ist neben den Schächten kein Platz: Die Öffnungen müssen für die 70 mm breiten Laufwerke fast die ganze Breite einnehmen.
