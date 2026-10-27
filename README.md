@@ -2,7 +2,14 @@
 
 3D-druckbares Server-Gehäuse für einen Raspberry Pi 5 mit M.2 HAT+ und zwei 2,5"-Laufwerken. Gedacht für Minecraft-Server, Backup und NAS.
 
-**Aktuelle Version: 7**
+**Aktuelle Version: 8**
+
+**Außenmaße (Breite × Tiefe × Höhe):**
+
+| Stil | Maße |
+|---|---|
+| Server (mit Griffen) | ca. 7,7 × 15,7 × 9,9 cm |
+| NAS | ca. 7,7 × 14,5 × 9,9 cm |
 
 Es gibt zwei Stil-Varianten mit identischem Innenleben. Nur Front, Außenkanten und Griffe unterscheiden sich. **Hauptstil ist Server**, NAS bleibt als Alternative.
 
@@ -183,6 +190,20 @@ Offizielles 27-W-Netzteil (5 V / 5 A) verwenden. Damit liefern die USB-Ports zus
 - Steckpassungen haben 0,3 mm Spiel.
 - Ausrichtung: Wanne aufrecht (Füße aufs Druckbett), Pi-Träger flach, Deckel mit der Außenseite aufs Druckbett, Power-Stößel liegend, Filterrahmen flach.
 
+### STL-Dateien (Server-Stil)
+
+Im Ordner `stl/PiCRAFT_Server/`. Die Dateien liegen schon in Druckausrichtung bei z = 0, sie müssen im Slicer nur noch platziert werden.
+
+| Datei | Größe auf dem Druckbett (mm) | Ausrichtung |
+|---|---|---|
+| `Gehaeuse.stl` | 77 × 156,5 × 96,5 hoch | aufrecht auf den Füßen |
+| `Deckel.stl` | 77 × 145 × 6,5 hoch | Außenseite unten |
+| `Pi_Traeger.stl` | 71,4 × 139,4 × 14,1 hoch | flach, Abstandshalter oben |
+| `Power_Stoessel.stl` | 7 × 57,5 × 5,5 hoch | liegend |
+| `Filterrahmen.stl` | 63,4 × 37,5 × 1,4 hoch | flach |
+
+Das Gehäuse braucht ein Druckbett von mindestens 160 mm Tiefe. Das Skript schreibt die STL-Dateien bei jedem Lauf neu (Stile in `STL_STYLES`) und prüft dabei, dass jedes Netz geschlossen ist und sich nicht selbst schneidet.
+
 ## Schrauben
 
 | Anzahl | Teil | Wofür |
@@ -198,7 +219,6 @@ Offizielles 27-W-Netzteil (5 V / 5 A) verwenden. Damit liefern die USB-Ports zus
 ### MUST
 
 - **Probedruck** (zurückgestellt): Ein Teststück mit Pi-Lochbild, Port-Ausschnitt, Schiene und Laufwerks-Langloch drucken, um Passung und Toleranzen zu prüfen.
-- **STL-Dateien exportieren** (zurückgestellt).
 - **Lage des Power-Knopfs am echten Pi prüfen:** Position und Höhe stammen aus der Maßzeichnung bzw. sind geschätzt. Der Stößel muss genau den Knopf treffen.
 
 ### SHOULD

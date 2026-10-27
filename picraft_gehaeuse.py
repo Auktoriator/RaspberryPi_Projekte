@@ -1,5 +1,5 @@
-# PiCRAFT – Raspberry Pi 5 Gehäuse mit zwei 2,5"-Schächten, Version 7
-# V7: Name PiCRAFT (Schriftzug, Dokumente, Dateien); Stil „server“ ist der Hauptstil, „nas“ bleibt als Alternative
+# PiCRAFT – Raspberry Pi 5 Gehäuse mit zwei 2,5"-Schächten, Version 8
+# V8: STL-Export der Druckteile in Druckausrichtung; Stößel-Bund unten bündig (liegt flach auf dem Druckbett)
 # In FreeCAD ausführen: baut für jeden Stil in STYLES ein eigenes Dokument komplett neu auf.
 # Koordinaten: X = Breite (links->rechts), Y = Tiefe (vorne->hinten), Z = Höhe.
 # Ursprung = innere vordere linke untere Ecke des Gehäuses. Alle Maße in mm.
@@ -16,6 +16,7 @@ EDGE_C = 2.5       # server: Fase der senkrechten Außenkanten
 
 # Stil -> FreeCAD-Dokument. Innenleben ist bei allen Stilen gleich, nur Front, Kanten und Griffe unterscheiden sich.
 STYLES = {"server": "PiCRAFT_Server", "nas": "PiCRAFT_NAS"}
+STL_STYLES = ("server",)   # für diese Stile werden STL-Dateien nach stl/<Dokument>/ geschrieben
 
 NAME = "PiCRAFT"   # Schriftzug auf der Front
 FONT = "/System/Library/Fonts/Supplemental/Arial Rounded Bold.ttf"
@@ -221,25 +222,26 @@ def build_tub(style):
 # ---------- Pi-Träger (Einlegeplatte) ----------
 tray = box(FIT, FIT, TRAY_Z, W - FIT, D - FIT, TRAY_Z + TRAY_T)
 holes = [pi(px, py) for px in (3.5, 61.5) for py in (3.5, 52.5)]
+ROD_GUIDES_Y = (14, 40)   # U-Führungen für den Power-Stößel (je 4 mm lang)
 slots = []
 for y in range(8, int(D) - 8, 7):
-    if all(abs(y + 1.5 - hy) > 6 for _, hy in holes):
+    if all(abs(y + 1.5 - hy) > 6 for _, hy in holes) and all(abs(y + 1.5 - (gy + 2)) > 5 for gy in ROD_GUIDES_Y):
         slots.append(box(10, y, TRAY_Z - 1, W - 10, y + 3, TRAY_Z + TRAY_T + 1))
 tray = cut_all(tray, slots)
 for hx, hy in holes:
     tray = tray.fuse(Part.makeCylinder(3, STANDOFF_H, V(hx, hy, TRAY_Z + TRAY_T)))
 tray = cut_all(tray, [Part.makeCylinder(1.25, 20, V(hx, hy, TRAY_Z - 1)) for hx, hy in holes])  # M2.5 selbstschneidend
-for gy in (14, 40):   # U-Führungen für den Power-Stößel (oben offen, Stößel wird eingelegt)
+for gy in ROD_GUIDES_Y:   # oben offen, der Stößel wird eingelegt
     tray = tray.fuse(box(BTN_X - 4.2, gy, TRAY_Z + TRAY_T, BTN_X + 4.2, gy + 4, BTN_Z + 2)
                      .cut(box(BTN_X - 2.2, gy - 1, BTN_Z - 2.1, BTN_X + 2.2, gy + 5, BTN_Z + 10)))
 tray = tray.removeSplitter()
 
 # ---------- Power-Stößel ----------
 # 4x4-Stab in den Führungen bis 0,5 mm vor den Knopf, vorne rund (Ø 4) durch die Front, 1,5 mm überstehend.
-# Der Bund innen verhindert Herausfallen.
+# Der Bund innen verhindert Herausfallen; unten bündig mit dem Stab, damit der Stößel flach gedruckt werden kann.
 rod = box(BTN_X - 2, 2.5, BTN_Z - 2, BTN_X + 2, BTN_Y - 0.5, BTN_Z + 2)
 rod = rod.fuse(Part.makeCylinder(2, T + 4.5, V(BTN_X, -T - 1.5, BTN_Z), V(0, 1, 0)))
-rod = rod.fuse(box(BTN_X - 3.5, 0.5, BTN_Z - 3.5, BTN_X + 3.5, 2.5, BTN_Z + 3.5)).removeSplitter()
+rod = rod.fuse(box(BTN_X - 3.5, 0.5, BTN_Z - 2, BTN_X + 3.5, 2.5, BTN_Z + 3.5)).removeSplitter()
 
 # ---------- Filterrahmen ----------
 fx0, fx1 = 4 + FIT, W - 4 - FIT
@@ -276,6 +278,32 @@ refs = {
     "HDD_1": box((W - DRV_W) / 2, 0, 0, (W + DRV_W) / 2, DRV_L, DRV_H),
     "HDD_2": box((W - DRV_W) / 2, 0, SLOT_H + RAIL, (W + DRV_W) / 2, DRV_L, SLOT_H + RAIL + DRV_H),
 }
+
+# ---------- STL-Export ----------
+# Druckausrichtung je Teil: Drehachse und Winkel (Grad); danach liegt jedes Teil bei z=0 auf dem Druckbett
+PRINT_POSE = {
+    "Gehaeuse": None,                      # aufrecht, Füße unten
+    "Pi_Traeger": None,                    # flach
+    "Deckel": (V(1, 0, 0), 180),           # Außenseite aufs Druckbett
+    "Power_Stoessel": None,                # liegend, Bund unten bündig
+    "Filterrahmen": (V(1, 0, 0), 90),      # flach
+}
+
+def export_stl(doc, outdir):
+    import os, MeshPart
+    os.makedirs(outdir, exist_ok=True)
+    for name, pose in PRINT_POSE.items():
+        shp = doc.getObject(name).Shape.copy()
+        if pose:
+            shp.rotate(V(0, 0, 0), pose[0], pose[1])
+        bb = shp.BoundBox
+        shp.translate(V(-bb.XMin, -bb.YMin, -bb.ZMin))
+        # 0,05 mm reicht für FDM; feinere Netze erzeugen Schein-Selbstüberschneidungen an der Schrift
+        mesh = MeshPart.meshFromShape(Shape=shp, LinearDeflection=0.05, AngularDeflection=0.3, Relative=False)
+        if not mesh.isSolid():
+            mesh.fillupHoles(100, 0, 0.0)   # schließt Haarrisse aus der Triangulierung großer Flächen
+        assert mesh.isSolid() and not mesh.hasNonManifolds() and not mesh.getSelfIntersections(), name + ".stl fehlerhaft"
+        mesh.write(os.path.join(outdir, name + ".stl"))
 
 # ---------- Dokumente aufbauen (eins pro Stil) ----------
 def add(doc, name, shape, color, transp=0, group=None):
@@ -325,6 +353,13 @@ for style, doc_name in STYLES.items():
     bb = tub.BoundBox
     print(f"[{style}] Kollisionen:", problems or "keine")
     print(f"[{style}] Außenmaß: {bb.XLength:.1f} x {bb.YLength:.1f} x {bb.ZLength + T:.1f} mm (B x T x H, mit Deckel)")
+    if style in STL_STYLES:
+        if doc.FileName:   # Ablageort ergibt sich aus der gespeicherten .FCStd
+            import os
+            export_stl(doc, os.path.join(os.path.dirname(doc.FileName), "stl", doc_name))
+            print(f"[{style}] STL-Dateien geschrieben")
+        else:
+            print(f"[{style}] Dokument noch nie gespeichert -> STL-Export übersprungen")
     if App.GuiUp:
         import FreeCADGui as Gui
         Gui.getDocument(doc_name).activeView().viewIsometric()
