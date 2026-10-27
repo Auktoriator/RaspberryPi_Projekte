@@ -2,7 +2,9 @@
 
 3D-druckbares Gehäuse im Stil eines kleinen 2-Bay-NAS für einen Raspberry Pi 5 mit M.2 HAT+ und zwei 2,5"-Laufwerken.
 
-**Aktuelle Version: 4**
+**Aktuelle Version: 5**
+
+![Ansicht des Gehäuses](ansicht.png)
 
 ![Foto des aktuellen Aufbaus](IMG_3338.jpeg)
 
@@ -13,6 +15,7 @@
 | `nas_gehaeuse.py` | Bauskript. Alle Maße als Parameter oben. Erzeugt das Modell in FreeCAD komplett neu. |
 | `Pi5_NAS_Gehaeuse.FCStd` | Gespeichertes FreeCAD-Modell (Ergebnis des Skripts) |
 | `CLAUDE.md` | Arbeitsanweisungen für Claude Code |
+| `ansicht.png` | Gerenderte Ansicht des Gehäuses |
 | `IMG_3338.jxl` / `.jpeg` | Foto des aktuellen Aufbaus (JPEG für die Anzeige auf GitHub) |
 
 Modell neu erzeugen: In FreeCAD *Makro → Makros…* oder über Claude (FreeCAD-MCP) `nas_gehaeuse.py` ausführen.
@@ -21,6 +24,7 @@ Modell neu erzeugen: In FreeCAD *Makro → Makros…* oder über Claude (FreeCAD
 
 - **Außenmaß:** 77 × 145 × 99 mm (B × T × H, mit Deckel und Füßen)
 - **Innenmaß:** 72 × 140 × 90 mm, Wandstärke 2,5 mm
+- **Außenkanten:** senkrechte Kanten von Gehäuse und Deckel mit 4 mm Radius, runde Füße
 
 ### Druckteile
 
@@ -29,7 +33,7 @@ Modell neu erzeugen: In FreeCAD *Makro → Makros…* oder über Claude (FreeCAD
 | Gehäuse (Wanne) | Boden, vier Wände, Laufwerksschienen, Auflageleisten für den Pi-Träger, vier Füße |
 | Pi-Träger | 3 mm Einlegeplatte mit vier Abstandshaltern (6 mm, Loch für M2.5 selbstschneidend) |
 | Deckel | Geschlossene Platte mit umlaufendem Steckrand, mit 4 Schrauben befestigt |
-| Power-Stößel | 4 × 4 mm Stab, drückt von der Front auf den Power-Knopf des Pi |
+| Power-Stößel | 4 × 4 mm Stab mit rundem Ende (Ø 4 mm) in der Front, drückt auf den Power-Knopf des Pi |
 | Filterrahmen | Rahmen, der das Filtervlies hinter den Front-Lüftungsschlitzen hält |
 
 ### Aufbau von unten nach oben
@@ -41,9 +45,20 @@ Modell neu erzeugen: In FreeCAD *Makro → Makros…* oder über Claude (FreeCAD
 5. **M.2 HAT+** 15,5 mm über der Pi-Platine, SSD mit Kühlkörper knapp 15 mm hoch.
 6. Darüber ist nichts verbaut. Die Höhe bleibt trotzdem so, damit später ein AI HAT+ 2 hineinpasst (siehe [PCIe](#pcie-m2-hat-und-ai-hat-2)).
 
+### Front
+
+NAS-Look, von oben nach unten:
+
+- **Lüftungsgitter:** 13 senkrechte Schlitze (2 mm) in einem 0,6 mm vertieften Feld mit runden Ecken; dahinter der Staubfilter.
+- **Power-Knopf:** runder Druckpunkt (Ø 4 mm) mit eingraviertem Ring, rechts.
+- **Schriftzug „PiNAS“:** 7 mm hoch, 0,6 mm tief eingraviert, links. Name und Schrift stehen als `NAME` und `FONT` oben im Skript.
+- **Laufwerksschächte:** Öffnungen außen mit 0,8 mm Fase; zwischen den Schächten bleibt dadurch eine feine Trennlinie.
+
+Die **Schachtnummern 1 und 2** sind auf der linken Seitenwand neben den Laufwerksschrauben eingraviert. Auf der Front ist neben den Schächten kein Platz: Die Öffnungen müssen für die 70 mm breiten Laufwerke fast die ganze Breite einnehmen.
+
 ### Öffnungen
 
-- **Front:** zwei Laufwerksschächte; darüber Lüftungsschlitze mit Staubfilter dahinter; Loch für den Power-Stößel
+- **Front:** siehe [Front](#front)
 - **Rückseite:** Ausschnitt für 2× USB + Ethernet; Kabeldurchlass (22 × 12 mm) unten
 - **Rechts:** Ausschnitt für USB-C und 2× Micro-HDMI
 - **Links:** 40-mm-Lüfteröffnung mit Fingerschutz (Abluft); 4 Langlöcher für die Laufwerksschrauben
@@ -175,7 +190,6 @@ Offizielles 27-W-Netzteil (5 V / 5 A) verwenden. Damit liefern die USB-Ports zus
 
 ### SHOULD
 
-- **Front gestalten** (nächster Schritt).
 - **Temperatur prüfen** (zurückgestellt), vor allem unter Last mit Minecraft-Server.
 - **Status-LEDs** des Pi sichtbar machen (zurückgestellt).
 

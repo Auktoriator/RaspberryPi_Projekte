@@ -1,5 +1,5 @@
-# Raspberry Pi 5 Mini-NAS Gehäuse, Version 4
-# V4: Laufwerke verschraubt, Deckel verschraubt, Power-Stößel, Zugentlastung, Staubfilter vorne
+# Raspberry Pi 5 Mini-NAS Gehäuse, Version 5
+# V5: Front im NAS-Look (Fasen an den Schächten, Lüftungsgitter im vertieften Feld, Power-Ring, Schrift), runde Kanten
 # In FreeCAD ausführen: baut das Dokument "Projekt" komplett neu auf.
 # Koordinaten: X = Breite (links->rechts), Y = Tiefe (vorne->hinten), Z = Höhe.
 # Ursprung = innere vordere linke untere Ecke des Gehäuses. Alle Maße in mm.
@@ -11,6 +11,12 @@ from FreeCAD import Vector as V
 T = 2.5            # Wandstärke
 W, D, H = 72, 140, 90   # Innenmaße Breite, Tiefe, Höhe
 FIT = 0.3          # Spiel für Teile, die ineinander gesteckt werden
+EDGE_R = 4         # Radius der senkrechten Außenkanten
+
+NAME = "PiNAS"     # Schriftzug auf der Front
+FONT = "/System/Library/Fonts/Supplemental/Arial Rounded Bold.ttf"
+ENGRAVE = 0.6      # Tiefe von Gravuren und Vertiefungen
+BAY_CHAMFER = 0.8  # Fase an den Schachtöffnungen
 
 DRV_W, DRV_L, DRV_H = 69.85, 100.0, 9.5   # 2,5"-Laufwerk (SFF-8201), max. 9,5 mm hoch
 ADAPTER_L = 20     # USB-SATA-Adapter hinter dem Laufwerk (gemessen: HDD + Adapter = 120 mm); dahinter Platz für den Kabelbogen
@@ -66,6 +72,30 @@ def wall_rail(z_top, right=False):
 def cut_all(shape, cutters):
     return shape.cut(Part.makeCompound(cutters)) if cutters else shape
 
+def rounded_box(x0, y0, z0, x1, y1, z1, r=EDGE_R):
+    # Quader mit abgerundeten senkrechten Kanten
+    b = box(x0, y0, z0, x1, y1, z1)
+    return b.makeFillet(r, [e for e in b.Edges if abs(e.Vertexes[0].Point.z - e.Vertexes[1].Point.z) > 1e-6])
+
+def text_solid(txt, size):
+    # Schrift als Körper in der XY-Ebene, Dicke ENGRAVE+0.1 nach -Z
+    faces = [Part.makeFace(ch, "Part::FaceMakerBullseye") for ch in Part.makeWireString(txt, FONT, size, 0)]
+    return Part.makeCompound([f.extrude(V(0, 0, -ENGRAVE - 0.1)) for f in faces])
+
+def on_front(sol, x, z):
+    # Text auf die Frontfläche (Blick von vorne, liest sich links -> rechts)
+    s = sol.copy(); s.transformShape(App.Matrix(1, 0, 0, x, 0, 0, -1, -T - 0.1, 0, 1, 0, z, 0, 0, 0, 1)); return s
+
+def on_left(sol, y, z):
+    # Text auf die linke Außenwand (Blick von links), beginnt bei y und läuft nach hinten
+    s = sol.copy(); s.transformShape(App.Matrix(0, 0, -1, -T - 0.1, -1, 0, 0, y, 0, 1, 0, z, 0, 0, 0, 1)); return s
+
+def front_chamfer(x0, x1, z0, z1, c=BAY_CHAMFER):
+    # Pyramidenstumpf, der eine Öffnung in der Front außen um c anfast
+    def rect(y, d):
+        return Part.makePolygon([V(x0 - d, y, z0 - d), V(x1 + d, y, z0 - d), V(x1 + d, y, z1 + d), V(x0 - d, y, z1 + d), V(x0 - d, y, z0 - d)])
+    return Part.makeLoft([rect(-T - 0.01, c + 0.01), rect(-T + c, 0)], True)
+
 def slot_x(x0, x1, y0, y1, zc, r):
     # Langloch in X-Richtung durch eine Seitenwand, Y von y0 bis y1
     d = V(x1 - x0, 0, 0)
@@ -81,17 +111,26 @@ def boss(x_wall, yc, z_top, right=False):
     return Part.Face(wire).extrude(V(0, LID_BOSS_W, 0))
 
 # ---------- Gehäuse (Wanne) ----------
-tub = box(-T, -T, -T, W + T, D + T, H).cut(box(0, 0, 0, W, D, H + 1))
+tub = rounded_box(-T, -T, -T, W + T, D + T, H).cut(box(0, 0, 0, W, D, H + 1))
 cuts = []
 # vorne: zwei Laufwerksschächte
 mx = (W - (DRV_W + 1.2)) / 2
-cuts.append(box(mx, -T - 1, 0, W - mx, 1, SLOT_H))
-cuts.append(box(mx, -T - 1, SLOT_H + RAIL, W - mx, 1, 2 * SLOT_H + RAIL))
-# vorne: Lüftungsschlitze oberhalb der Schächte (hinter dem Staubfilter)
-for x in range(10, W - 12, 6):
-    cuts.append(box(x, -T - 1, FILTER_Z0 + 4, x + 3, 1, FILTER_Z1 - 4.5))
-# vorne: Durchführung für den Power-Stößel
-cuts.append(box(BTN_X - 2.3, -T - 1, BTN_Z - 2.3, BTN_X + 2.3, 1, BTN_Z + 2.3))
+for z0, z1 in ((0, SLOT_H), (SLOT_H + RAIL, 2 * SLOT_H + RAIL)):
+    cuts.append(box(mx, -T - 1, z0, W - mx, 1, z1))
+    cuts.append(front_chamfer(mx, W - mx, z0, z1))
+# vorne: Lüftungsgitter (2-mm-Schlitze) in einem vertieften Feld, Staubfilter dahinter
+grille = box(6, -T - 1, FILTER_Z0 + 2, W - 6, -T + ENGRAVE, FILTER_Z1 - 2.5)
+cuts.append(grille.makeFillet(3, [e for e in grille.Edges if abs(e.Vertexes[0].Point.y - e.Vertexes[1].Point.y) > 1e-6]))
+for i in range(13):
+    x = W / 2 - 25 + 4 * i
+    cuts.append(box(x, -T - 1, FILTER_Z0 + 4, x + 2, 1, FILTER_Z1 - 4.5))
+# vorne: runde Durchführung für den Power-Stößel mit eingraviertem Ring
+cuts.append(Part.makeCylinder(2.3, T + 2, V(BTN_X, -T - 1, BTN_Z), V(0, 1, 0)))
+cuts.append(Part.makeCylinder(5, ENGRAVE + 1, V(BTN_X, -T - 1, BTN_Z), V(0, 1, 0)).cut(Part.makeCylinder(4, ENGRAVE + 2, V(BTN_X, -T - 2, BTN_Z), V(0, 1, 0))))
+# vorne: Schriftzug, links: Schachtnummern neben den Laufwerksschrauben
+cuts.append(on_front(text_solid(NAME, 7), 6, 31))
+for n, z0 in (("1", 0), ("2", SLOT_H + RAIL)):
+    cuts.append(on_left(text_solid(n, 6), 24, z0 + DRV_H / 2 - 3))
 # hinten: Öffnung für Pi-Anschlüsse (USB, USB, Ethernet)
 x_a, _ = pi(0, 1); x_b, _ = pi(0, 55)
 cuts.append(box(x_a, D - 1, PCB_TOP - 1, x_b, D + T + 1, PCB_TOP + 17))
@@ -127,8 +166,8 @@ tub = tub.fuse(cut_all(box(CABLE_X0 + 2, D - 14, 0, CABLE_X1 - 2, D - 8, 5), [bo
 for xa, xb, xc, xd in ((2, 8, 4, 9), (W - 8, W - 2, W - 9, W - 4)):
     tub = tub.fuse(box(xa, 0, FILTER_Z0 - 1, xb, 5, FILTER_Z1 + 0.5).cut(box(xc, -1, FILTER_Z0, xd, FILTER_T + 1.3, H)))
 # Füße (Luftspalt unter dem Gehäuse)
-for fx, fy in ((-T, -T), (W + T - 10, -T), (-T, D + T - 10), (W + T - 10, D + T - 10)):
-    tub = tub.fuse(box(fx, fy, -T - 4, fx + 10, fy + 10, -T))
+for fx, fy in ((-T + 7, -T + 7), (W + T - 7, -T + 7), (-T + 7, D + T - 7), (W + T - 7, D + T - 7)):
+    tub = tub.fuse(Part.makeCylinder(5, 4, V(fx, fy, -T - 4)))
 tub = tub.removeSplitter()
 
 # ---------- Pi-Träger (Einlegeplatte) ----------
@@ -148,8 +187,10 @@ for gy in (14, 40):   # U-Führungen für den Power-Stößel (oben offen, Stöß
 tray = tray.removeSplitter()
 
 # ---------- Power-Stößel ----------
-# 4x4-Stab von außen (1,5 mm überstehend) bis 0,5 mm vor den Knopf; Bund innen verhindert Herausfallen
-rod = box(BTN_X - 2, -T - 1.5, BTN_Z - 2, BTN_X + 2, BTN_Y - 0.5, BTN_Z + 2)
+# 4x4-Stab in den Führungen bis 0,5 mm vor den Knopf, vorne rund (Ø 4) durch die Front, 1,5 mm überstehend.
+# Der Bund innen verhindert Herausfallen.
+rod = box(BTN_X - 2, 2.5, BTN_Z - 2, BTN_X + 2, BTN_Y - 0.5, BTN_Z + 2)
+rod = rod.fuse(Part.makeCylinder(2, T + 4.5, V(BTN_X, -T - 1.5, BTN_Z), V(0, 1, 0)))
 rod = rod.fuse(box(BTN_X - 3.5, 0.5, BTN_Z - 3.5, BTN_X + 3.5, 2.5, BTN_Z + 3.5)).removeSplitter()
 
 # ---------- Filterrahmen ----------
@@ -159,7 +200,7 @@ filt = filt.cut(box(fx0 + 3, -1, FILTER_Z0 + 3.2, fx1 - 3, 3, FILTER_Z1 - 3))
 filt = filt.fuse(box((fx0 + fx1) / 2 - 1, 0.1, FILTER_Z0, (fx0 + fx1) / 2 + 1, 0.1 + FILTER_T, FILTER_Z1)).removeSplitter()
 
 # ---------- Deckel ----------
-lid = box(-T, -T, H, W + T, D + T, H + T)
+lid = rounded_box(-T, -T, H, W + T, D + T, H + T)
 lip = box(FIT, FIT, H - 4, W - FIT, D - FIT, H).cut(box(FIT + 2, FIT + 2, H - 5, W - FIT - 2, D - FIT - 2, H + 1))
 lid = lid.fuse(lip)   # geschlossen: kein Staub von oben
 lid = cut_all(lid, [Part.makeCylinder(1.7, T + 2, V(x, yc, H - 1)) for x in (LID_BOSS_W / 2 + 0.5, W - LID_BOSS_W / 2 - 0.5) for yc in LID_BOSS_Y]).removeSplitter()
