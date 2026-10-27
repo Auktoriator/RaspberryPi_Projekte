@@ -19,8 +19,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - Koordinaten: X = Breite (links→rechts), Y = Tiefe (vorne→hinten), Z = Höhe; Ursprung = innere vordere linke untere Gehäuseecke. Innenmaß `W × D × H`, Wand `T`.
 - Alle Maße stehen als Parameter oben. Der Pi wird über `pi(px, py)` platziert: Pi-Koordinaten aus der offiziellen Maßzeichnung (px entlang 85 mm, py entlang 56 mm, py=0 = HDMI-Kante) → Gehäuse-X/Y. Die Abbildung ist eine Drehung, keine Spiegelung – Portpositionen immer über `pi()`/`pi_box()` angeben.
-- Z-Aufbau von unten: zwei Laufwerksschächte (`SLOT_H`, Trennschiene `RAIL`) → Pi-Träger auf Leisten bei `TRAY_Z` → Pi auf Abstandshaltern → M.2 HAT (`HAT_GAP`) → Reserve für AI HAT → Deckel.
-- Drei Druckteile (Gruppe „Druckteile“): `Gehaeuse` (Wanne), `Pi_Traeger` (Einlegeplatte), `Deckel`. Alles in „Referenz_nicht_drucken“ sind Platzhalter-Quader nur für Kollisionstest und Optik.
+- Z-Aufbau von unten: zwei Laufwerksschächte (`SLOT_H`, Trennschiene `RAIL`) → Pi-Träger auf Leisten bei `TRAY_Z` → Pi auf Abstandshaltern → M.2 HAT (`HAT_GAP`, `SSD_STACK`) → freier Raum (Höhe bewusst beibehalten für einen möglichen AI HAT+ 2) → Deckel.
+- Druckteile (Gruppe „Druckteile“): `Gehaeuse` (Wanne), `Pi_Traeger` (Einlegeplatte), `Deckel`, `Power_Stoessel`, `Filterrahmen`. Der Selbsttest prüft jedes Druckteil gegen alle Referenzteile und gegen jedes andere Druckteil. Alles in „Referenz_nicht_drucken“ sind Platzhalter-Quader nur für Kollisionstest und Optik.
 - Reine Part-CSG (`box`, `cut_all`, `fuse`), kein PartDesign/Spreadsheet.
 
 ## Druckregeln

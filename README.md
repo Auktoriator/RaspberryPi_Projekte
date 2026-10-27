@@ -2,7 +2,7 @@
 
 3D-druckbares Gehäuse im Stil eines kleinen 2-Bay-NAS für einen Raspberry Pi 5 mit M.2 HAT+ und zwei 2,5"-Laufwerken.
 
-**Aktuelle Version: 3**
+**Aktuelle Version: 4**
 
 ![Foto des aktuellen Aufbaus](IMG_3338.jpeg)
 
@@ -28,29 +28,43 @@ Modell neu erzeugen: In FreeCAD *Makro → Makros…* oder über Claude (FreeCAD
 |---|---|
 | Gehäuse (Wanne) | Boden, vier Wände, Laufwerksschienen, Auflageleisten für den Pi-Träger, vier Füße |
 | Pi-Träger | 3 mm Einlegeplatte mit vier Abstandshaltern (6 mm, Loch für M2.5 selbstschneidend) |
-| Deckel | Geschlossene Platte mit umlaufendem Steckrand |
+| Deckel | Geschlossene Platte mit umlaufendem Steckrand, mit 4 Schrauben befestigt |
+| Power-Stößel | 4 × 4 mm Stab, drückt von der Front auf den Power-Knopf des Pi |
+| Filterrahmen | Rahmen, der das Filtervlies hinter den Front-Lüftungsschlitzen hält |
 
 ### Aufbau von unten nach oben
 
-1. **Laufwerk 1** liegt auf dem Boden, **Laufwerk 2** auf einer Trennschiene (12 mm Schachthöhe je Laufwerk). Einschub von vorne.
-2. Dahinter 40 mm Platz: 20 mm für den USB-SATA-Adapter, 20 mm für den Kabelbogen. Die Kabel gehen durch eine Öffnung in der Rückwand nach außen.
+1. **Laufwerk 1** liegt auf dem Boden, **Laufwerk 2** auf einer Trennschiene (12 mm Schachthöhe je Laufwerk). Einschub von vorne, je zwei Schrauben durch die linke Wand.
+2. Dahinter 40 mm Platz: 20 mm für den USB-SATA-Adapter, 20 mm für den Kabelbogen. Beide Kabel laufen über eine Kabelbinder-Brücke am Boden (Zugentlastung) und durch einen Durchlass unten in der Rückwand nach außen.
 3. **Pi-Träger** liegt auf Leisten bei 30 mm Höhe.
 4. **Raspberry Pi 5** auf den Abstandshaltern, USB/Ethernet nach hinten, USB-C/Micro-HDMI nach rechts.
 5. **M.2 HAT+** 15,5 mm über der Pi-Platine, SSD mit Kühlkörper knapp 15 mm hoch.
-6. Reserve für einen **AI HAT+** darüber, gleicher Abstand (0,5 mm über dem SSD-Kühlkörper, 5 mm Luft bis zum Deckelrand).
+6. Darüber ist nichts verbaut. Die Höhe bleibt trotzdem so, damit später ein AI HAT+ 2 hineinpasst (siehe [PCIe](#pcie-m2-hat-und-ai-hat-2)).
 
 ### Öffnungen
 
-- **Front:** zwei Laufwerksschächte, darüber senkrechte Lüftungsschlitze
-- **Rückseite:** Ausschnitt für 2× USB + Ethernet; Kabel- und Luftöffnung hinter den Laufwerken
-- **Rechts:** Ausschnitt für USB-C und 2× Micro-HDMI; Lüftungsschlitze
-- **Links:** 40-mm-Lüfteröffnung mit Fingerschutz (Abluft); Lüftungsschlitze im Laufwerksbereich
-- **Boden:** Lüftungsschlitze unter den Laufwerken
-- **Deckel:** geschlossen (Staubschutz)
+- **Front:** zwei Laufwerksschächte; darüber Lüftungsschlitze mit Staubfilter dahinter; Loch für den Power-Stößel
+- **Rückseite:** Ausschnitt für 2× USB + Ethernet; Kabeldurchlass (22 × 12 mm) unten
+- **Rechts:** Ausschnitt für USB-C und 2× Micro-HDMI
+- **Links:** 40-mm-Lüfteröffnung mit Fingerschutz (Abluft); 4 Langlöcher für die Laufwerksschrauben
+- **Boden:** geschlossen, mit Füßen
+- **Deckel:** geschlossen (Staubschutz), 4 Schraublöcher
 
 ### Luftführung
 
-Frischluft kommt durch Boden, Front und rechte Seite herein, strömt über die Laufwerke und den Pi und wird vom Lüfter links oben nach außen geblasen.
+Der Lüfter links oben bläst die Luft nach außen. Frischluft kommt hauptsächlich durch die gefilterten Front-Schlitze und strömt über den Pi. Die Laufwerke werden durch die Spalte an den Schächten belüftet; diese Luft zieht nach hinten und durch die Schlitze im Pi-Träger nach oben. Alle anderen Lüftungsschlitze sind geschlossen, damit möglichst viel Luft durch den Filter kommt.
+
+### Laufwerke befestigen
+
+Jedes Laufwerk wird mit zwei M3-Schrauben durch die linke Wand in seine seitlichen Gewindelöcher geschraubt. Die Lage dieser Löcher unterscheidet sich je nach Hersteller um etwa 4 mm (9,6/86,2 mm oder 14,0/90,6 mm von der Front). Die Wand hat deshalb Langlöcher, die beide Lagen abdecken. Die Schrauben dürfen höchstens 3 mm ins Laufwerk ragen: **M3 × 5** bei 2,5 mm Wand.
+
+### Power-Knopf
+
+Der Power-Knopf des Pi 5 sitzt an der vorderen kurzen Kante (18,4 mm von der HDMI-Seite). Der Power-Stößel liegt in zwei U-Führungen auf dem Pi-Träger und ragt 1,5 mm aus der Front. Ein Bund innen verhindert, dass er herausfällt. Einlegen: Pi-Träger herausnehmen, Stößel von innen durch das Frontloch schieben und in die Führungen legen.
+
+### Staubfilter
+
+Filtervlies (z. B. PC-Staubfiltergewebe oder Lüftungs-Filtermatte, ca. 1 mm dick) auf **ca. 63 × 37 mm** zuschneiden. Bei abgenommenem Deckel das Vlies innen an die Front legen und den Filterrahmen von oben in die zwei Führungsnuten schieben. Er hält das Vlies gegen die Wand. Zum Reinigen herausziehen und ausklopfen oder absaugen.
 
 ## Komponenten
 
@@ -80,9 +94,11 @@ Frischluft kommt durch Boden, Front und rechte Seite herein, strömt über die L
 
 ## PCIe: M.2 HAT+ und AI HAT+ 2
 
+**Aktueller Stand:** Der M.2 HAT+ bleibt verbaut, darüber kommt nichts. Ob später ein AI HAT+ 2 kommt, ist noch offen. Die Gehäusehöhe hat Platz dafür: Der AI HAT+ 2 mit Kühlkörper ist ca. 14 mm hoch und würde an der Stelle des M.2 HAT+ sitzen.
+
 Der Pi 5 hat **genau einen PCIe-Anschluss** (1 Lane, PCIe 2.0 offiziell). M.2 HAT+ und AI HAT+ 2 brauchen beide diesen Anschluss. Beim AI HAT+ 2 ist der Hailo-Chip fest aufgelötet; er lässt sich also nicht als M.2-Modul in einen anderen Steckplatz stecken.
 
-### Variante A: AI HAT+ 2 direkt, System auf der SATA-SSD (empfohlen)
+### Variante A: AI HAT+ 2 statt M.2 HAT+, System auf der SATA-SSD (empfohlen, falls AI HAT+ 2)
 
 1. Raspberry Pi OS auf die neue SATA-SSD in Schacht 2 übertragen und Boot-Reihenfolge auf USB stellen (`sudo raspi-config` → *Advanced Options* → *Boot Order* → *USB Boot*).
 2. M.2 HAT+ mit der 2242-NVMe ausbauen.
@@ -104,9 +120,29 @@ Warum nicht empfohlen:
 - Mit dem älteren AI Kit (Hailo-8L) lief eine Kombination mit dem Pimoroni NVMe Base Duo ([Forum](https://forums.raspberrypi.com/viewtopic.php?t=371991)), das ist aber ein anderes Produkt.
 - Mechanisch wird der Stapel aus drei Platinen plus Switch deutlich höher.
 
-### Lüfter anschließen
+## Lüfter und Lüftersteuerung
 
-Der Lüfteranschluss des Pi ist vom Active Cooler belegt. Den Gehäuselüfter deshalb an die GPIO-Pins anschließen: **Pin 4 = 5 V, Pin 6 = GND**. Er läuft dann immer mit voller Drehzahl.
+Der Lüfteranschluss des Pi ist vom Active Cooler belegt. Der Gehäuselüfter hängt deshalb an der GPIO-Leiste (die Stifte ragen durch den Stapelheader des M.2 HAT+ nach oben).
+
+**Einfach (Dauerbetrieb):** Lüfter + an **Pin 4 (5 V)**, Lüfter − an **Pin 6 (GND)**.
+
+**Temperaturgesteuert (empfohlen):** Ein Transistor schaltet den Lüfter, der Pi schaltet ihn über die eingebaute Funktion `gpio-fan` ab einer Temperatur ein.
+
+| Bauteil | Anschluss |
+|---|---|
+| NPN-Transistor BC337 (oder 2N2222) | Emitter → **Pin 6 (GND)** |
+| Widerstand 1 kΩ | von **Pin 32 (GPIO 12)** zur Basis des Transistors |
+| Lüfter + | **Pin 4 (5 V)** |
+| Lüfter − | Kollektor des Transistors |
+| Diode 1N4148 | parallel zum Lüfter, Strich (Kathode) zu 5 V |
+
+In `/boot/firmware/config.txt` eine Zeile ergänzen und neu starten:
+
+```
+dtoverlay=gpio-fan,gpiopin=12,temp=55000
+```
+
+Der Lüfter läuft dann ab 55 °C CPU-Temperatur und schaltet bei Abkühlung wieder ab. Die kleine Schaltung passt auf ein Stück Lochraster und wird mit doppelseitigem Klebeband innen an die Wand geklebt.
 
 ### Strom
 
@@ -117,41 +153,42 @@ Offizielles 27-W-Netzteil (5 V / 5 A) verwenden. Damit liefern die USB-Ports zus
 - **Material:** PETG (wegen der warmen Abluft am Lüfter)
 - Keine Stützen nötig: Überhänge haben 45°-Fasen.
 - Steckpassungen haben 0,3 mm Spiel.
-- Ausrichtung: Wanne aufrecht (Boden aufs Druckbett), Pi-Träger flach, Deckel mit der Außenseite aufs Druckbett.
+- Ausrichtung: Wanne aufrecht (Füße aufs Druckbett), Pi-Träger flach, Deckel mit der Außenseite aufs Druckbett, Power-Stößel liegend, Filterrahmen flach.
 
 ## Schrauben
 
-- 4× M2.5 × 6 (Pi auf Träger)
-- 4× M3 × 16 + Muttern (Lüfter)
+| Anzahl | Teil | Wofür |
+|---|---|---|
+| 4 | M2.5 × 6, selbstschneidend in den Kunststoff | Pi auf den Träger |
+| 4 | M3 × 5 (Flach- oder Linsenkopf) | Laufwerke durch die linke Wand |
+| 4 | M3 × 16 + Mutter | Lüfter |
+| 4 | M3 × 16, selbstschneidend in den Kunststoff | Deckel in die Schraubdome |
+| 1 | Kabelbinder, max. 2,5 mm breit | Zugentlastung der Laufwerkskabel |
 
 ## Offene Aufgaben
 
 ### MUST
 
-- **Modell auf Variante A umstellen:** M.2 HAT+ durch AI HAT+ 2 mit Kühlkörper (ca. 14 mm hoch) ersetzen und den Platz darüber neu prüfen.
-- **Laufwerke sichern:** Die Laufwerke liegen lose in den Schächten. Sie brauchen einen Anschlag hinten oder eine Klemme vorne, sonst rutschen sie beim Kabelziehen.
-- **Deckel befestigen:** Der Deckel liegt nur lose auf. Er braucht Clips oder Schrauben.
-- **Probedruck:** Ein kleines Teststück mit Pi-Lochbild, Port-Ausschnitt und Schiene drucken, um Passung und Toleranzen zu prüfen, bevor das ganze Gehäuse gedruckt wird.
-- **STL-Dateien exportieren** (Wanne, Pi-Träger, Deckel).
+- **Probedruck** (zurückgestellt): Ein Teststück mit Pi-Lochbild, Port-Ausschnitt, Schiene und Laufwerks-Langloch drucken, um Passung und Toleranzen zu prüfen.
+- **STL-Dateien exportieren** (zurückgestellt).
+- **Lage des Power-Knopfs am echten Pi prüfen:** Position und Höhe stammen aus der Maßzeichnung bzw. sind geschätzt. Der Stößel muss genau den Knopf treffen.
 
 ### SHOULD
 
-- **Temperatur des AI HAT+ 2 prüfen:** Der Hersteller schreibt, das Gehäuse soll nicht abgedeckt sein. Der Deckel ist geschlossen; der Lüfter muss die Wärme vom Kühlkörper abführen. Eventuell Lüftungsschlitze im Deckel direkt über dem Kühlkörper.
-- **Power-Knopf** von außen erreichbar machen (Loch mit Stößel).
-- **Zugentlastung** für die USB-Kabel an der Rückwand.
-- **Status-LEDs** des Pi sichtbar machen (Lichtleiter oder kleines Fenster).
+- **Front gestalten** (nächster Schritt).
+- **Temperatur prüfen** (zurückgestellt), vor allem unter Last mit Minecraft-Server.
+- **Status-LEDs** des Pi sichtbar machen (zurückgestellt).
 
-### COULD
+### Für eine spätere Hauptversion
+
+Erst nach dem ersten Druck und längerem Ausprobieren:
 
 - Herausziehbare Laufwerksschlitten mit Griff an der Front, wie bei einer Synology.
 - Gewindeeinsätze aus Messing statt selbstschneidender Schrauben.
-- Staubfilter vor den Ansaugschlitzen.
-- Lüfter über einen Transistor temperaturabhängig steuern statt Dauerbetrieb.
-- Gestaltung der Front (Fasen, Logo, Beschriftung der Schächte).
-- Zugang zur microSD (mit USB-Boot kaum noch nötig).
+- Zugang zur microSD.
 
-### WONT (in dieser Ausbaustufe)
+### WONT
 
 - M.2 HAT+ und AI HAT+ 2 gleichzeitig über einen PCIe-Switch (siehe Variante B).
-- SATA-HATs über PCIe (z. B. Radxa Penta, Waveshare 2-Ch): PCIe ist vom AI HAT+ 2 belegt.
+- SATA-HATs über PCIe (z. B. Radxa Penta, Waveshare 2-Ch): Der PCIe-Anschluss ist belegt.
 - 15-mm-Laufwerke, 3,5"-Laufwerke, mehr als zwei Laufwerke.
