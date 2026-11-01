@@ -109,7 +109,7 @@ Filtervlies (z. B. PC-Staubfiltergewebe oder Lüftungs-Filtermatte, ca. 1 mm dic
 | Raspberry Pi 5 | Platine 85 × 56 mm, Löcher Ø 2,7 im Raster 58 × 49 mm (3,5 mm vom Rand). Ports an der langen Kante: USB-C 11,2 / HDMI0 25,8 / HDMI1 39,2 mm. An der kurzen Kante: Ethernet 10,2 / USB 29,1 / USB 47 mm. Ports stehen 3 mm über. | [Offizielle Maßzeichnung](https://pip-assets.raspberrypi.com/categories/892-raspberry-pi-5/documents/RP-008347-DS-1-raspberry-pi-5-mechanical-drawing.pdf) |
 | Raspberry Pi Active Cooler | unter dem M.2 HAT+ montiert | – |
 | M.2 HAT+ (M Key) | 65 × 56,5 mm, 16-mm-Stapelheader. Gemessen: 15,5 mm über der Pi-Platine. SSD 2242 mit Metall-Kühlkörper, knapp 15 mm über dem HAT. | [Product Brief](https://cdn.sparkfun.com/assets/4/0/7/e/8/Raspberry_Pi_M.2-HAT_Product_Brief_v9.pdf) |
-| AI HAT+ 2 (geplant) | Hailo-10H, 40 TOPS, 8 GB RAM. Platine 65 × 56,5 mm, 16-mm-Stapelheader. Kühlkörper (wird montiert) 42,5 × 64 mm, Push-Pins, ca. 14 mm hoch. Betrieb bis 50 °C Umgebung. | `RP-009655-MM-6-raspberry-pi-ai-hat-plus-2-product-brief.pdf` |
+| AI HAT+ 2 (geplant) | Hailo-10H, 40 TOPS, 8 GB RAM. Platine 65 × 56,5 mm, 16-mm-Stapelheader. Kühlkörper (wird montiert) 42,5 × 64 mm, Push-Pins, ca. 14 mm hoch. Betrieb bis 50 °C Umgebung. | [Product Brief](https://pip-assets.raspberrypi.com/categories/1319-raspberry-pi-ai-hat-2/documents/RP-009655-MM-6-raspberry-pi-ai-hat-plus-2-product-brief.pdf) |
 | 2× 2,5"-Laufwerk | 69,85 × 100 mm, max. 9,5 mm hoch | SFF-8201 |
 | 2× USB-SATA-Adapter | siehe [Laufwerke und Adapter](#laufwerke-und-adapter) | – |
 | Gehäuselüfter | 40 × 40 × 10 mm, 5 V (z. B. Noctua NF-A4x10 5V), M3-Schrauben, Lochabstand 32 mm | – |

@@ -4,3 +4,5 @@
 # Original-Foto (17 MB); im Repo liegen .jxl und .jpeg
 IMG_3338.png
 *.blend1
+# Herstellerdokumente nur lokal (Urheberrecht beim Hersteller), in der README verlinkt
+*.pdf
